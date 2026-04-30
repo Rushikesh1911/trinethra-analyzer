@@ -10,7 +10,7 @@ router.post('/', async (req, res) => {
   try {
     const { transcript } = req.body;
 
-    // Validate input
+    // this function validate input we get
     if (!transcript || transcript.trim().length === 0) {
       return res.status(400).json({ 
         error: 'Transcript is required',
@@ -27,13 +27,13 @@ router.post('/', async (req, res) => {
 
     console.log('Analyzing transcript:', transcript.substring(0, 100) + '...');
 
-    // Generate analysis prompt
+    //  generation of the prompt by llm provider 
     const prompt = promptService.generateAnalysisPrompt(transcript);
     
-    // Send to Ollama
+    //sending of the prompt to the llm provider ollama
     const llmResponse = await ollamaService.generateResponse(prompt);
     
-    // Parse response
+    // this helps to parse response from the llm provider ollama
     const analysis = responseParser.parseAnalysis(llmResponse);
     
     console.log('Analysis completed successfully');
@@ -51,7 +51,7 @@ router.post('/', async (req, res) => {
   } catch (error) {
     console.error('Analysis failed:', error.message);
     
-    // Handle different types of errors
+    // for handling different types of errors
     if (error.message.includes('ECONNREFUSED')) {
       return res.status(503).json({
         error: 'Ollama service unavailable',
